@@ -1,6 +1,6 @@
-package com.github.redevizinha.models.friendship.entity;
+package com.github.redevizinha.models.connection.entity;
 
-import com.github.redevizinha.models.friendship.enums.FriendshipStatus;
+import com.github.redevizinha.models.connection.enums.ConnectionStatus;
 import com.github.redevizinha.models.user.entity.User;
 import com.github.redevizinha.utils.BaseEntity;
 import jakarta.persistence.*;
@@ -12,8 +12,8 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "friendships")
-public class Friendship extends BaseEntity {
+@Table(name = "connections")
+public class Connection extends BaseEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "requester_id", nullable = false)
@@ -25,7 +25,7 @@ public class Friendship extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private FriendshipStatus status = FriendshipStatus.PENDING;
+    private ConnectionStatus status = ConnectionStatus.PENDING;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "accepted_at")

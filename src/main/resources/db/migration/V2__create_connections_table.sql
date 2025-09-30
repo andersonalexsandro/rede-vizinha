@@ -1,4 +1,4 @@
-CREATE TABLE friendships (
+CREATE TABLE connections (
     id BIGSERIAL PRIMARY KEY,
     requester_id BIGINT NOT NULL,
     receiver_id BIGINT NOT NULL,
