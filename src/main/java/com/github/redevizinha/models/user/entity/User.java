@@ -1,5 +1,6 @@
 package com.github.redevizinha.models.user.entity;
 
+import com.github.redevizinha.models.friendship.entity.Friendship;
 import com.github.redevizinha.utils.BaseEntity;
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
@@ -7,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -52,4 +55,10 @@ public class User extends BaseEntity{
 
     @Column(name = "is_public_profile", nullable = false)
     private boolean isPublicProfile = true;
+
+    @OneToMany(mappedBy = "requester", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Friendship> sentFriendships = new HashSet<>();
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Friendship> receivedFriendships = new HashSet<>();
 }
