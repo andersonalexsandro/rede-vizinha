@@ -1,6 +1,6 @@
 package com.github.redevizinha.models.user.service;
 
-import com.github.redevizinha.models.user.dto.UserCreateRequest;
+import com.github.redevizinha.models.user.dto.UserRequest;
 import com.github.redevizinha.models.user.dto.UserPrivacyUpdate;
 import com.github.redevizinha.models.user.dto.UserPutRequest;
 import com.github.redevizinha.models.user.dto.UserResponse;
@@ -20,8 +20,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper mapper;
 
-    public UserResponse createUser(UserCreateRequest userCreateRequest) {
-        User user = mapper.map(userCreateRequest, User.class);
+    public UserResponse createUser(UserRequest userRequest) {
+        User user = mapper.map(userRequest, User.class);
         user = userRepository.save(user);
         return mapper.map(user, UserResponse.class);
     }
