@@ -1,5 +1,6 @@
 package com.github.redevizinha.models.user.entity;
 
+import com.github.redevizinha.models.bubble.entity.BubbleMember;
 import com.github.redevizinha.models.connection.entity.Connection;
 import com.github.redevizinha.models.directMessage.entity.DirectMessage;
 import com.github.redevizinha.utils.BaseEntity;
@@ -68,4 +69,8 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DirectMessage> receivedMessages = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BubbleMember> bubbleMemberships = new HashSet<>();
+
 }
