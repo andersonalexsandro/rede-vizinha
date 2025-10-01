@@ -1,11 +1,13 @@
 package com.github.redevizinha.models.bubble.entity;
 
+import com.github.redevizinha.models.group.entity.Group;
 import com.github.redevizinha.utils.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,4 +32,7 @@ public class Bubble extends BaseEntity {
 
     @Column(nullable = false)
     private boolean active = true;
+
+    @OneToMany(mappedBy = "bubble", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Group> groups = new HashSet<>();
 }
