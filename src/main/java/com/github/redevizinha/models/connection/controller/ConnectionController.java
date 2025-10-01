@@ -1,7 +1,9 @@
 package com.github.redevizinha.models.connection.controller;
 
 import com.github.redevizinha.models.connection.dto.ConnectionResponse;
+import com.github.redevizinha.models.connection.dto.ConnectionUpdateRequest;
 import com.github.redevizinha.models.connection.service.ConnectionService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,5 +36,13 @@ public class ConnectionController {
     @PostMapping("/{id}/block")
     public ConnectionResponse blockUser(@PathVariable Long id) {
         return connectionService.blockUser(id);
+    }
+
+    @PutMapping("/{id}")
+    public ConnectionResponse updateConnection(
+            @PathVariable Long id,
+            @RequestBody @Valid ConnectionUpdateRequest request
+    ) {
+        return connectionService.updateConnection(id, request);
     }
 }

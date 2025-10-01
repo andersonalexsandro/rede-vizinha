@@ -1,6 +1,7 @@
 package com.github.redevizinha.models.connection.service;
 
 import com.github.redevizinha.models.connection.dto.ConnectionResponse;
+import com.github.redevizinha.models.connection.dto.ConnectionUpdateRequest;
 import com.github.redevizinha.models.connection.entity.Connection;
 import com.github.redevizinha.models.connection.enums.ConnectionStatus;
 import com.github.redevizinha.models.connection.repository.ConnectionRepository;
@@ -37,6 +38,10 @@ public class ConnectionService {
     public ConnectionResponse sendFriendRequest(Long receiverId) {
         Long requesterId = userContextProvider.getCurrentUserId();
 
+        if(requesterId.equals(receiverId)) {
+            throw new IllegalArgumentException("You cannot send a friend request to yourself");
+        }
+
         User requester = userRepository.findById(requesterId)
                 .orElseThrow(() -> new EntityNotFoundException("Requester not found"));
         User receiver = userRepository.findById(receiverId)
@@ -59,6 +64,10 @@ public class ConnectionService {
     public void removeFriend(Long friendId) {
         Long userId = userContextProvider.getCurrentUserId();
 
+        if(userId.equals(friendId)) {
+            throw new IllegalArgumentException("You cannot remove yourself as a friend");
+        }
+
         Connection connection = connectionRepository
                 .findByUsers(userId, friendId, ConnectionStatus.ACCEPTED)
                 .orElseThrow(() -> new EntityNotFoundException("Connection not found"));
@@ -68,6 +77,10 @@ public class ConnectionService {
 
     public ConnectionResponse blockUser(Long receiverId) {
         Long requesterId = userContextProvider.getCurrentUserId();
+
+        if(requesterId.equals(receiverId)) {
+            throw new IllegalArgumentException("You cannot block yourself");
+        }
 
         Connection connection = connectionRepository
                 .findByUsers(requesterId, receiverId, null)
@@ -85,4 +98,49 @@ public class ConnectionService {
 
         return toResponse(connectionRepository.save(connection));
     }
+
+    public ConnectionResponse updateConnection(Long connectionId, ConnectionUpdateRequest request) {
+        Long currentUserId = userContextProvider.getCurrentUserId();
+
+        Connection connection = connectionRepository.findById(connectionId)
+                .orElseThrow(() -> new EntityNotFoundException("Connection not found"));
+
+        boolean isRequester = connection.getRequester().getId().equals(currentUserId);
+        boolean isReceiver = connection.getReceiver().getId().equals(currentUserId);
+
+        ConnectionStatus currentStatus = connection.getStatus();
+        ConnectionStatus newStatus = request.getStatus();
+
+        if (currentStatus == ConnectionStatus.PENDING) {
+            if (!isReceiver) {
+                throw new SecurityException("Somente o receptor pode responder a esta solicitação.");
+            }
+            if (newStatus == ConnectionStatus.PENDING) {
+                throw new IllegalStateException("Não é permitido manter a conexão como pendente.");
+            }
+        }
+
+        if (currentStatus == ConnectionStatus.ACCEPTED) {
+            if (!(isRequester || isReceiver)) {
+                throw new SecurityException("Você não tem permissão para atualizar esta conexão.");
+            }
+            if (newStatus == ConnectionStatus.PENDING) {
+                throw new IllegalStateException("Não é permitido reverter uma conexão aceita para pendente.");
+            }
+        }
+
+        if ((currentStatus == ConnectionStatus.REJECTED || currentStatus == ConnectionStatus.BLOCKED)
+                && newStatus == ConnectionStatus.PENDING) {
+            throw new IllegalStateException("Não é permitido reabrir uma conexão para pendente.");
+        }
+
+        connection.setStatus(newStatus);
+
+        if (newStatus == ConnectionStatus.ACCEPTED) {
+            connection.setAcceptedAt(new Date());
+        }
+
+        return toResponse(connectionRepository.save(connection));
+    }
+
 }
