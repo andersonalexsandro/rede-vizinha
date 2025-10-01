@@ -12,8 +12,6 @@ public class ModelMapperConfig {
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
 
-        mapper.registerModule(new RecordModule());
-
         mapper.getConfiguration()
                 .setSkipNullEnabled(true)
                 .setFieldMatchingEnabled(true)
