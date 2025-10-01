@@ -8,10 +8,11 @@ import com.github.redevizinha.models.user.repository.UserRepository;
 import com.github.redevizinha.security.UserContextProvider;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -37,9 +38,9 @@ public class ConnectionService {
         return connectionRepository.save(connection);
     }
 
-    public List<Connection> getFriends() {
+    public Page<Connection> getFriends(Pageable pageable) {
         Long userId = userContextProvider.getCurrentUserId();
-        return connectionRepository.findAllByUserAndStatus(userId, ConnectionStatus.ACCEPTED);
+        return connectionRepository.findAllByUserAndStatus(userId, ConnectionStatus.ACCEPTED, pageable);
     }
 
     public void removeFriend(Long friendId) {

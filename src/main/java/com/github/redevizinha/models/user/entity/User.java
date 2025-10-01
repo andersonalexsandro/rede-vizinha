@@ -1,6 +1,7 @@
 package com.github.redevizinha.models.user.entity;
 
 import com.github.redevizinha.models.connection.entity.Connection;
+import com.github.redevizinha.models.directMessage.entity.DirectMessage;
 import com.github.redevizinha.utils.BaseEntity;
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
@@ -61,4 +62,10 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Connection> receivedConnections = new HashSet<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<DirectMessage> sentMessages = new HashSet<>();
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<DirectMessage> receivedMessages = new HashSet<>();
 }

@@ -3,10 +3,10 @@ package com.github.redevizinha.models.connection.controller;
 import com.github.redevizinha.models.connection.entity.Connection;
 import com.github.redevizinha.models.connection.service.ConnectionService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -16,13 +16,13 @@ public class ConnectionController {
     private final ConnectionService connectionService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<Connection> sendFriendRequest(@PathVariable Long id) {
-        return ResponseEntity.ok(connectionService.sendFriendRequest(id));
+    public Connection sendFriendRequest(@PathVariable Long id) {
+        return connectionService.sendFriendRequest(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<Connection>> getFriends() {
-        return ResponseEntity.ok(connectionService.getFriends());
+    public Page<Connection> getFriends(Pageable pageable) {
+        return connectionService.getFriends(pageable);
     }
 
     @DeleteMapping("/{id}")
@@ -32,7 +32,7 @@ public class ConnectionController {
     }
 
     @PostMapping("/{id}/block")
-    public ResponseEntity<Connection> blockUser(@PathVariable Long id) {
-        return ResponseEntity.ok(connectionService.blockUser(id));
+    public Connection blockUser(@PathVariable Long id) {
+        return connectionService.blockUser(id);
     }
 }

@@ -1,0 +1,19 @@
+package com.github.redevizinha.models.directMessage.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DirectMessageResponse {
+    private Long id;
+    private Long senderId;
+    private Long receiverId;
+    private String content;
+    private LocalDateTime sentAt; // mapeado de createdAt
+    private LocalDateTime readAt;
+}
