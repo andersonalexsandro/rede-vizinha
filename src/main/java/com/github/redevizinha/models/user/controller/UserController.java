@@ -17,12 +17,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
-        UserResponse created = userService.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
-
     @GetMapping
     public ResponseEntity<Page<UserResponse>> getAllUsers(Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUsers(pageable));
