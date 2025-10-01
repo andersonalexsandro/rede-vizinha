@@ -52,9 +52,6 @@ public class BubbleMemberService {
                     return bm;
                 });
 
-        member.setJoinedAt(LocalDateTime.now());
-        member.setLeftAt(null);
-
         BubbleMember saved = bubbleMemberRepository.save(member);
         return mapper.map(saved, BubbleMemberResponse.class);
     }

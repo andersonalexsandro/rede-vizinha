@@ -22,9 +22,6 @@ public class BubbleMember extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "joined_at", nullable = false)
-    private LocalDateTime joinedAt = LocalDateTime.now();
-
     @Column(name = "left_at")
     private LocalDateTime leftAt;
 

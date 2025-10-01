@@ -10,6 +10,5 @@ public class BubbleMemberResponse {
     private Long userId;
     private Long bubbleId;
     private String role;
-    private LocalDateTime joinedAt;
     private LocalDateTime leftAt;
 }

@@ -15,7 +15,6 @@ CREATE TABLE bubble_members (
     id BIGSERIAL PRIMARY KEY,
     bubble_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    joined_at TIMESTAMP NOT NULL,
     left_at TIMESTAMP,
     role VARCHAR(50) DEFAULT 'MEMBER',
     created_at TIMESTAMP,
