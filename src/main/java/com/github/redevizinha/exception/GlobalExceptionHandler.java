@@ -23,6 +23,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Value("${spring.debug:false}")
     private boolean enableTrace;
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<Object> handleAllUncaughtException(
+            Exception ex,
+            WebRequest request
+    ) {
+        String userMessage = "An unexpected error occurred. Please contact support if the problem persists.";
+
+        if (enableTrace) {
+            return buildErrorResponse(ex, ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        } else {
+            return buildErrorResponse(ex, userMessage, HttpStatus.INTERNAL_SERVER_ERROR, request);
+        }
+    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
