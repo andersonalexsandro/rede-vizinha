@@ -23,9 +23,14 @@ public class GroupController {
         return groupService.create(request);
     }
 
+    @PostMapping("/{id}/join")
+    public GroupJoinResponse joinGroup(@PathVariable Long id) {
+        return groupService.joinGroup(id);
+    }
+
     @GetMapping
     public Page<GroupResponse> search(
-            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String groupName,
             @RequestParam(required = false) String tags,
             Pageable pageable
     ) {
@@ -35,7 +40,7 @@ public class GroupController {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .toList();
-        return groupService.search(q, tagList, pageable);
+        return groupService.search(groupName, tagList, pageable);
     }
 
     @GetMapping("/{id}")
@@ -71,4 +76,10 @@ public class GroupController {
     ) {
         return groupService.postMessage(id, request);
     }
+
+    @GetMapping("/{id}/members")
+    public Page<GroupMemberResponse> listMembers(@PathVariable Long id, Pageable pageable) {
+        return groupService.listMembers(id, pageable);
+    }
+
 }

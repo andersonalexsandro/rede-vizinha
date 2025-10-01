@@ -184,7 +184,6 @@ public class GroupService {
         User author = userRepository.findById(uid)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // garante que o autor é membro (auto-join simples)
         if (!groupMemberRepository.existsByGroupIdAndUserId(groupId, uid)) {
             GroupMember gm = new GroupMember();
             gm.setGroup(g);
@@ -200,7 +199,6 @@ public class GroupService {
 
         GroupMessage saved = groupMessageRepository.save(msg);
 
-        // atualiza lastActivity
         g.setLastActivity(LocalDateTime.now());
         groupRepository.save(g);
 
@@ -209,5 +207,53 @@ public class GroupService {
         r.setAuthorId(author.getId());
         r.setSentAt(saved.getCreatedAt());
         return r;
+    }
+
+    public GroupJoinResponse joinGroup(Long groupId) {
+        Long uid = userContext.getCurrentUserId();
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
+
+        if (group.isClosed()) {
+            throw new IllegalStateException("Group is closed");
+        }
+
+        User user = userRepository.findById(uid)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (groupMemberRepository.existsByGroupIdAndUserId(groupId, uid)) {
+            GroupJoinResponse resp = new GroupJoinResponse();
+            resp.setGroupId(group.getId());
+            resp.setUserId(uid);
+            resp.setRole("MEMBER");
+            return resp;
+        }
+
+        GroupMember gm = new GroupMember();
+        gm.setGroup(group);
+        gm.setUser(user);
+        gm.setRole("MEMBER");
+        groupMemberRepository.save(gm);
+
+        GroupJoinResponse resp = new GroupJoinResponse();
+        resp.setGroupId(group.getId());
+        resp.setUserId(uid);
+        resp.setRole("MEMBER");
+        return resp;
+    }
+
+    public Page<GroupMemberResponse> listMembers(Long groupId, Pageable pageable) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
+
+        return groupMemberRepository.findByGroupId(group.getId(), pageable)
+                .map(member -> {
+                    GroupMemberResponse resp = new GroupMemberResponse();
+                    resp.setUserId(member.getUser().getId());
+                    resp.setUserName(member.getUser().getName());
+                    resp.setRole(member.getRole());
+                    resp.setJoinedAt(member.getJoinedAt() != null ? member.getJoinedAt().toString() : null);
+                    return resp;
+                });
     }
 }

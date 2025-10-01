@@ -19,6 +19,5 @@ public class GroupRequest {
     @Size(max = 500, message = "A descrição pode ter no máximo 500 caracteres")
     private String description;
 
-    // tags opcionais ao criar
     private List<@Size(min = 1, max = 40) String> tags;
 }
