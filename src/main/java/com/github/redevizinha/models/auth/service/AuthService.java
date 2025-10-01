@@ -21,7 +21,6 @@ public class AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
         String usernameOrEmail = loginRequest.getUsernameOrEmail();
         String rawPassword = loginRequest.getPassword();
-        System.out.println(loginRequest);
         User user = userRepository.findByUsername(usernameOrEmail)
                 .or(() -> userRepository.findByEmail(usernameOrEmail))
                 .orElseThrow(() -> new EntityNotFoundException("usuário não encontrado"));
@@ -31,7 +30,6 @@ public class AuthService {
         }
 
         String token = jwtService.generateToken(user.getUsername());
-        System.out.println(token);
         return new LoginResponse(token);
     }
 }

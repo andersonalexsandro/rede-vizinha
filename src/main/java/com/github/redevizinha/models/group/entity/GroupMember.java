@@ -28,5 +28,6 @@ public class GroupMember extends BaseEntity {
     private LocalDateTime leftAt;
 
     @Column(length = 50, nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role = Role.MEMBER;
 }

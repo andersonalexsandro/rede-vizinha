@@ -26,7 +26,7 @@ public class BubbleMember extends BaseEntity {
     @Column(name = "left_at")
     private LocalDateTime leftAt;
 
-    @Column(name = "role")
+    @Column(length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role = Role.MEMBER;
 }
