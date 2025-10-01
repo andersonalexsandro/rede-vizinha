@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DirectMessageRequest {
 
-    @NotNull(message = "O ID do destinatário é obrigatório")
-    private Long receiverId;
-
     @NotBlank(message = "O conteúdo da mensagem não pode estar vazio")
     @Size(max = 1000, message = "A mensagem não pode ter mais que 1000 caracteres")
     private String content;
