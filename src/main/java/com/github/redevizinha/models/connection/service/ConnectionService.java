@@ -1,5 +1,6 @@
 package com.github.redevizinha.models.connection.service;
 
+import com.github.redevizinha.models.connection.dto.ConnectionResponse;
 import com.github.redevizinha.models.connection.entity.Connection;
 import com.github.redevizinha.models.connection.enums.ConnectionStatus;
 import com.github.redevizinha.models.connection.repository.ConnectionRepository;
@@ -8,6 +9,7 @@ import com.github.redevizinha.models.user.repository.UserRepository;
 import com.github.redevizinha.security.UserContextProvider;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,8 +23,18 @@ public class ConnectionService {
     private final ConnectionRepository connectionRepository;
     private final UserRepository userRepository;
     private final UserContextProvider userContextProvider;
+    private final ModelMapper mapper;
 
-    public Connection sendFriendRequest(Long receiverId) {
+    private ConnectionResponse toResponse(Connection connection) {
+        ConnectionResponse dto = mapper.map(connection, ConnectionResponse.class);
+        dto.setRequesterId(connection.getRequester().getId());
+        dto.setRequesterName(connection.getRequester().getName());
+        dto.setReceiverId(connection.getReceiver().getId());
+        dto.setReceiverName(connection.getReceiver().getName());
+        return dto;
+    }
+
+    public ConnectionResponse sendFriendRequest(Long receiverId) {
         Long requesterId = userContextProvider.getCurrentUserId();
 
         User requester = userRepository.findById(requesterId)
@@ -35,12 +47,13 @@ public class ConnectionService {
         connection.setReceiver(receiver);
         connection.setStatus(ConnectionStatus.PENDING);
 
-        return connectionRepository.save(connection);
+        return toResponse(connectionRepository.save(connection));
     }
 
-    public Page<Connection> getFriends(Pageable pageable) {
+    public Page<ConnectionResponse> getFriends(Pageable pageable) {
         Long userId = userContextProvider.getCurrentUserId();
-        return connectionRepository.findAllByUserAndStatus(userId, ConnectionStatus.ACCEPTED, pageable);
+        return connectionRepository.findAllByUserAndStatus(userId, ConnectionStatus.ACCEPTED, pageable)
+                .map(this::toResponse);
     }
 
     public void removeFriend(Long friendId) {
@@ -53,7 +66,7 @@ public class ConnectionService {
         connectionRepository.delete(connection);
     }
 
-    public Connection blockUser(Long receiverId) {
+    public ConnectionResponse blockUser(Long receiverId) {
         Long requesterId = userContextProvider.getCurrentUserId();
 
         Connection connection = connectionRepository
@@ -70,6 +83,6 @@ public class ConnectionService {
         connection.setStatus(ConnectionStatus.BLOCKED);
         connection.setAcceptedAt(new Date());
 
-        return connectionRepository.save(connection);
+        return toResponse(connectionRepository.save(connection));
     }
 }

@@ -1,6 +1,6 @@
 package com.github.redevizinha.models.connection.controller;
 
-import com.github.redevizinha.models.connection.entity.Connection;
+import com.github.redevizinha.models.connection.dto.ConnectionResponse;
 import com.github.redevizinha.models.connection.service.ConnectionService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,12 +16,12 @@ public class ConnectionController {
     private final ConnectionService connectionService;
 
     @PostMapping("/{id}")
-    public Connection sendFriendRequest(@PathVariable Long id) {
+    public ConnectionResponse sendFriendRequest(@PathVariable Long id) {
         return connectionService.sendFriendRequest(id);
     }
 
     @GetMapping
-    public Page<Connection> getFriends(Pageable pageable) {
+    public Page<ConnectionResponse> getFriends(Pageable pageable) {
         return connectionService.getFriends(pageable);
     }
 
@@ -32,7 +32,7 @@ public class ConnectionController {
     }
 
     @PostMapping("/{id}/block")
-    public Connection blockUser(@PathVariable Long id) {
+    public ConnectionResponse blockUser(@PathVariable Long id) {
         return connectionService.blockUser(id);
     }
 }
