@@ -14,13 +14,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -64,19 +62,16 @@ public class BubbleMemberService {
     public Page<BubbleMemberResponse> getFriendsInBubble(Long bubbleId, Pageable pageable) {
         Long userId = userContextProvider.getCurrentUserId();
 
-        // Busca paginada das conexões do usuário
         Page<Connection> connections = connectionRepository.findAllByUserAndStatus(
                 userId, com.github.redevizinha.models.connection.enums.ConnectionStatus.ACCEPTED, pageable
         );
 
-        // Extrai IDs dos amigos
         List<Long> friendIds = connections.getContent().stream()
                 .map(conn -> conn.getRequester().getId().equals(userId)
                         ? conn.getReceiver().getId()
                         : conn.getRequester().getId())
                 .toList();
 
-        // Busca amigos que estão dentro da bolha, também paginado
         return bubbleMemberRepository.findFriendsInBubble(bubbleId, friendIds, pageable)
                 .map(member -> mapper.map(member, BubbleMemberResponse.class));
     }
