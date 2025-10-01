@@ -1,5 +1,6 @@
 package com.github.redevizinha.models.group.service;
 
+import com.github.redevizinha.commons.Role;
 import com.github.redevizinha.models.bubble.entity.Bubble;
 import com.github.redevizinha.models.bubble.repository.BubbleRepository;
 import com.github.redevizinha.models.group.dto.*;
@@ -95,7 +96,7 @@ public class GroupService {
             GroupMember gm = new GroupMember();
             gm.setGroup(saved);
             gm.setUser(creator);
-            gm.setRole("CREATOR");
+            gm.setRole(Role.ADMIN);
             groupMemberRepository.save(gm);
         }
 
@@ -188,7 +189,7 @@ public class GroupService {
             GroupMember gm = new GroupMember();
             gm.setGroup(g);
             gm.setUser(author);
-            gm.setRole("MEMBER");
+            gm.setRole(Role.MEMBER);
             groupMemberRepository.save(gm);
         }
 
@@ -225,20 +226,20 @@ public class GroupService {
             GroupJoinResponse resp = new GroupJoinResponse();
             resp.setGroupId(group.getId());
             resp.setUserId(uid);
-            resp.setRole("MEMBER");
+            resp.setRole(Role.MEMBER);
             return resp;
         }
 
         GroupMember gm = new GroupMember();
         gm.setGroup(group);
         gm.setUser(user);
-        gm.setRole("MEMBER");
+        gm.setRole(Role.MEMBER);
         groupMemberRepository.save(gm);
 
         GroupJoinResponse resp = new GroupJoinResponse();
         resp.setGroupId(group.getId());
         resp.setUserId(uid);
-        resp.setRole("MEMBER");
+        resp.setRole(Role.MEMBER);
         return resp;
     }
 
@@ -256,4 +257,16 @@ public class GroupService {
                     return resp;
                 });
     }
+
+    public Page<GroupResponse> listGroupsInBubble(Long bubbleId, Pageable pageable) {
+        return groupRepository.findByBubbleId(bubbleId, pageable)
+                .map(g -> {
+                    GroupResponse r = mapper.map(g, GroupResponse.class);
+                    r.setBubbleId(g.getBubble().getId());
+                    r.setCreatorId(g.getCreator().getId());
+                    r.setTags(tagsOf(g));
+                    return r;
+                });
+    }
+
 }

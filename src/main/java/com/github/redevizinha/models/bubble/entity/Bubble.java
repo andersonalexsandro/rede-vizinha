@@ -1,7 +1,7 @@
 package com.github.redevizinha.models.bubble.entity;
 
 import com.github.redevizinha.models.group.entity.Group;
-import com.github.redevizinha.utils.BaseEntity;
+import com.github.redevizinha.commons.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

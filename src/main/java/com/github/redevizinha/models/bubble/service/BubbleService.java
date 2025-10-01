@@ -4,6 +4,9 @@ import com.github.redevizinha.models.bubble.dto.BubbleRequest;
 import com.github.redevizinha.models.bubble.dto.BubbleResponse;
 import com.github.redevizinha.models.bubble.entity.Bubble;
 import com.github.redevizinha.models.bubble.repository.BubbleRepository;
+import com.github.redevizinha.models.user.entity.User;
+import com.github.redevizinha.models.user.repository.UserRepository;
+import com.github.redevizinha.security.UserContextProvider;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,6 +20,8 @@ public class BubbleService {
 
     private final BubbleRepository bubbleRepository;
     private final ModelMapper mapper;
+    private final UserRepository userRepository;
+    private final UserContextProvider userContextProvider;
 
     public BubbleResponse createBubble(BubbleRequest request) {
         Bubble bubble = mapper.map(request, Bubble.class);

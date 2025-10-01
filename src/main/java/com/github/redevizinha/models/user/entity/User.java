@@ -3,7 +3,7 @@ package com.github.redevizinha.models.user.entity;
 import com.github.redevizinha.models.bubble.entity.BubbleMember;
 import com.github.redevizinha.models.connection.entity.Connection;
 import com.github.redevizinha.models.directMessage.entity.DirectMessage;
-import com.github.redevizinha.utils.BaseEntity;
+import com.github.redevizinha.commons.utils.BaseEntity;
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import lombok.Getter;

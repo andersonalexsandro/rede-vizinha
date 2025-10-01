@@ -1,7 +1,8 @@
 package com.github.redevizinha.models.group.entity;
 
+import com.github.redevizinha.commons.Role;
 import com.github.redevizinha.models.user.entity.User;
-import com.github.redevizinha.utils.BaseEntity;
+import com.github.redevizinha.commons.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,5 +28,5 @@ public class GroupMember extends BaseEntity {
     private LocalDateTime leftAt;
 
     @Column(length = 50, nullable = false)
-    private String role = "MEMBER"; // CREATOR, MODERATOR, MEMBER...
+    private Role role = Role.MEMBER;
 }

@@ -5,6 +5,8 @@ import com.github.redevizinha.models.bubble.dto.BubbleRequest;
 import com.github.redevizinha.models.bubble.dto.BubbleResponse;
 import com.github.redevizinha.models.bubble.service.BubbleMemberService;
 import com.github.redevizinha.models.bubble.service.BubbleService;
+import com.github.redevizinha.models.group.dto.GroupResponse;
+import com.github.redevizinha.models.group.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ public class BubbleController {
 
     private final BubbleService bubbleService;
     private final BubbleMemberService bubbleMemberService;
+    private final GroupService groupService;
 
     @PostMapping
     public BubbleResponse createBubble(@Valid @RequestBody BubbleRequest request) {
@@ -65,5 +68,10 @@ public class BubbleController {
     @PostMapping("/{id}/notify")
     public String notifyFriends(@PathVariable Long id) {
         return bubbleMemberService.notifyFriends(id);
+    }
+
+    @GetMapping("/{id}/groups")
+    public Page<GroupResponse> listGroupsInBubble(@PathVariable Long id, Pageable pageable) {
+        return groupService.listGroupsInBubble(id, pageable);
     }
 }

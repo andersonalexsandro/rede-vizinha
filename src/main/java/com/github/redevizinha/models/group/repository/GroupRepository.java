@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
+    Page<Group> findByBubbleId(Long bubbleId, Pageable pageable);
 
     @Query("""
         SELECT DISTINCT g FROM Group g
