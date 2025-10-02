@@ -128,5 +128,3 @@ docker-compose down -v
 ```
 
 ---
-
-✅ Agora qualquer pessoa consegue subir seu projeto **do zero** com Docker e acessar o **Swagger** em minutos.
